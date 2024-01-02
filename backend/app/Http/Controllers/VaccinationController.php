@@ -31,7 +31,7 @@ class VaccinationController extends Controller
             if (!$firstVaccination) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "You haven't vaccinate yet"
+                    'message' => "You haven't vaccinate yet",
                 ], 200);
             }
 
@@ -44,7 +44,7 @@ class VaccinationController extends Controller
 
         return response()->json([
             'date' => $vaccination->date,
-            'vaccine' => $vaccine->name,
+            // 'vaccine' => $vaccine->name,
             'dose' => $vaccination->dose,
         ], 200);
     }
@@ -74,6 +74,44 @@ class VaccinationController extends Controller
         return response()->json($spots, 200);
     }
 
+    public function getSpotById(Request $request)
+    {
+        $validation = $request->validate([
+            'id' => 'required'
+        ]);
+
+        $spot = Spots::where('id', $request['id'])->first();
+        if (!$spot) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Spot not found'
+            ], 404);
+        }
+
+        return response()->json($spot, 200);
+    }
+
+    public function getSessionById(Request $request)
+    {
+        $validation = $request->validate([
+            'id' => 'required',
+            'date' => 'required'
+        ]);
+
+        $occupied = Vaccinations::where('spot_id', $request->id)->get();
+        if (!$occupied) {
+            return response()->json([
+                'status' => 'success',
+                'occupied' => 0
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'occupied' => $occupied->count()
+        ], 200);
+    }
+
     public function postVaccinations(Request $request)
     {
         $validation = $request->validate([
@@ -101,7 +139,7 @@ class VaccinationController extends Controller
                 'date' =>  Carbon::now(),
                 'society_id' =>  $society->id,
                 'spot_id' =>  $request->spot_id,
-                'vaccine_id' =>  $request->vaccine_id,
+                'vaccine_id' =>  null,
             ]);
 
             return response()->json([
@@ -114,7 +152,7 @@ class VaccinationController extends Controller
                 'date' =>  Carbon::now(),
                 'society_id' =>  $society->id,
                 'spot_id' =>  $request->spot_id,
-                'vaccine_id' =>  $request->vaccine_id,
+                'vaccine_id' =>  null,
             ]);
 
             return response()->json([

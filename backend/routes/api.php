@@ -31,4 +31,6 @@ Route::post('/v1/consultations', [ConsultationController::class, 'postConsultati
 
 Route::get('/v1/vaccinations', [VaccinationController::class, 'getVaccinations']);
 Route::post('/v1/vaccinations', [VaccinationController::class, 'postVaccinations']);
-Route::get('/v1/vaccination/spot', [VaccinationController::class, 'getSpots']);
+Route::get('/v1/spots', [VaccinationController::class, 'getSpots']);
+Route::get('/v1/spotid', [VaccinationController::class, 'getSpotById']);
+Route::get('/v1/sessionbydate', [VaccinationController::class, 'getSessionByDate']);

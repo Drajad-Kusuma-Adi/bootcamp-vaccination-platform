@@ -14,6 +14,9 @@ function Header() {
       const token = localStorage.getItem('vaccinePlatformToken');
       axios.get('http://127.0.0.1:8000/api/v1/auth/check_token?token=' + token)
         .then(response => {
+          if (window.location.pathname === '/') {
+            window.location.replace('/dashboard');
+          }
           const name = response.data.name;
           setName(name);
           setIsAuth(true);
@@ -21,7 +24,14 @@ function Header() {
         .catch(error => {
           alert('Something went wrong, please try again');
           console.log(error);
+          if (window.location.pathname === '/') {
+            window.location.replace('/dashboard');
+          }
         });
+    } else {
+        if (window.location.pathname !== '/') {
+            window.location.replace('/');
+        }
     }
   }
 
